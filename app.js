@@ -9,6 +9,7 @@ const app = express();
 const path = require('path');
 
 const authRouter = require('./routes/authRouter');
+const packageRouter = require('./routes/packageRouter');
 
 const uploadRouter = require('./routes/uploadRouter');
 const fileUpload = require('express-fileupload');
@@ -23,7 +24,7 @@ const helmet = require('helmet');
 let originUrl =
   process.env.NODE_ENV !== 'production'
     ? 'http://localhost:5173'
-    : 'https://comfistore-frontend.netlify.app';
+    : 'https://invest-template-frontend.netlify.app';
 
 app.use(
   cors({
@@ -44,7 +45,17 @@ app.use(express.static('./public'));
 app.use(express.json());
 
 app.use('/api/auth', authRouter);
+app.use('/api/package', packageRouter);
 app.use('/api/upload', uploadRouter);
+
+app.get('/api/coins', async (req, res) => {
+  const response = await fetch(
+    'https://coinlib.io/api/v1/coinlist?key=6cb4aca8259d352f&pref=USD&page=1&order=volume_desc'
+  );
+  const data = await response.json();
+
+  res.json(data);
+});
 
 app.use(errorHandlerMiddleware);
 app.use(notFoundMiddleware);

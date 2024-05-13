@@ -39,6 +39,12 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    accountNumber: {
+      type: String,
+    },
+    accountName: {
+      type: String,
+    },
     date: {
       type: String,
       default: moment().format('YYYY-DD-MM'),
