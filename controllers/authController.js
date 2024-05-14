@@ -117,7 +117,8 @@ const editSingleUser = async (req, res) => {
   if (!user) {
     throw new BadRequestError(`User with id ${userId} does not exist`);
   }
-  res.status(StatusCodes.OK).json({ user: user });
+  const token = user.createJWT();
+  res.status(StatusCodes.OK).json({ user: user, token: token });
 };
 
 const deleteSingleUser = async (req, res) => {
@@ -138,6 +139,27 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 
+const updateUserPassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  if (!oldPassword || !newPassword) {
+    throw new BadRequestError('Please provide both values');
+  }
+
+  const user = await User.findOne({ _id: req.user.userId });
+  const isPasswordCorrect = await user.comparePassword(oldPassword);
+  if (!isPasswordCorrect) {
+    throw new UnauthorizedError('Password did not match existing user');
+  }
+
+  user.password = newPassword;
+
+  await user.save();
+
+  const token = user.createJWT();
+
+  res.status(StatusCodes.OK).json({ user: user, token: token });
+};
+
 module.exports = {
   showCurrentUser,
   registerUser,
@@ -147,4 +169,5 @@ module.exports = {
   editSingleUser,
   deleteSingleUser,
   deleteAllUsers,
+  updateUserPassword,
 };

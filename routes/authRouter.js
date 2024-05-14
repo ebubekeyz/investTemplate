@@ -13,6 +13,7 @@ const {
   deleteSingleUser,
   deleteAllUsers,
   showCurrentUser,
+  updateUserPassword,
 } = require('../controllers/authController');
 
 router
@@ -22,6 +23,7 @@ router
 router.route('/local/register').post(registerUser);
 router.route('/local').post(loginUser);
 router.route('/showMe').get(auth, showCurrentUser);
+router.route('/updatePassword').patch(auth, updateUserPassword);
 router
   .route('/:id')
   .patch(auth, editSingleUser)

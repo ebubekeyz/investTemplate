@@ -10,6 +10,7 @@ const path = require('path');
 
 const authRouter = require('./routes/authRouter');
 const packageRouter = require('./routes/packageRouter');
+const walletRouter = require('./routes/walletRouter');
 
 const uploadRouter = require('./routes/uploadRouter');
 const fileUpload = require('express-fileupload');
@@ -46,6 +47,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRouter);
 app.use('/api/package', packageRouter);
+app.use('/api/wallet', walletRouter);
 app.use('/api/upload', uploadRouter);
 
 app.get('/api/coins', async (req, res) => {
