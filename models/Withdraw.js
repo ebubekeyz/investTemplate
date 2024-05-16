@@ -8,7 +8,7 @@ const WithdrawSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['processing', 'sent'],
+      enum: ['processing', 'sent', 'expired'],
       default: 'processing',
     },
     date: {
