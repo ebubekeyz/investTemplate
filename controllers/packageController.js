@@ -19,21 +19,19 @@ const getAllPackages = async (req, res) => {
   let result = Package.find(queryObject);
 
   if (user) {
-    result = Package.find({
+    result = Package.find(queryObject, {
       user: { $eq: user },
     });
   }
 
   if (coin) {
-    result = Package.find({
+    result = Package.find(queryObject, {
       coin: { $regex: coin, $options: 'i' },
     });
   }
 
   if (status) {
-    result = Package.find({
-      status: { $eq: status },
-    });
+    result = Package.find({ user: req.user.userId, status: { $eq: status } });
   }
   if (sort === 'latest') {
     result = result.sort('-createdAt');
@@ -50,21 +48,21 @@ const getAllPackages = async (req, res) => {
   }
 
   if (amount) {
-    result = Package.find({ amount: { $lte: amount } });
+    result = Package.find(queryObject, { amount: { $lte: amount } });
   }
   if (packageAmount) {
-    result = Package.find({
+    result = Package.find(queryObject, {
       'package.amount': { $lte: packageAmount },
     });
   }
   if (packagePlan) {
-    result = Package.find({
+    result = Package.find(queryObject, {
       'package.plan': { $regex: plan, $options: 'i' },
     });
   }
 
   if (date) {
-    result = Package.find({
+    result = Package.find(queryObject, {
       date: { $regex: date, $options: 'i' },
     });
   }
@@ -81,7 +79,7 @@ const getAllPackages = async (req, res) => {
   const numOfPage = Math.ceil(totalPackages / limit);
 
   res.status(StatusCodes.OK).json({
-    Packages: packages,
+    packages: packages,
     meta: {
       pagination: { page: page, total: totalPackages, pageCount: numOfPage },
     },
@@ -157,7 +155,7 @@ const getPackages = async (req, res) => {
   const numOfPage = Math.ceil(totalPackages / limit);
 
   res.status(StatusCodes.OK).json({
-    Packages: packages,
+    packages: packages,
     meta: {
       pagination: { page: page, total: totalPackages, pageCount: numOfPage },
     },
@@ -184,6 +182,13 @@ const editSinglePackage = async (req, res) => {
   if (!package) {
     throw new BadRequestError(`Package with id ${packageId} does not exist`);
   }
+  res.status(StatusCodes.OK).json({ package: package });
+};
+
+const editUserPackage = async (req, res) => {
+  const { id: userId } = req.params;
+  const package = await Package.updateMany({ user: userId }, req.body);
+
   res.status(StatusCodes.OK).json({ package: package });
 };
 
@@ -217,4 +222,5 @@ module.exports = {
   editSinglePackage,
   deleteSinglePackage,
   deleteAllPackages,
+  editUserPackage,
 };

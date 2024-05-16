@@ -13,6 +13,7 @@ const {
   deleteUserPackage,
   editSinglePackage,
   getPackages,
+  editUserPackage,
 } = require('../controllers/packageController');
 
 router
@@ -30,5 +31,6 @@ router
   .patch(auth, editSinglePackage);
 
 router.route('/:id/deleteUserPackage').delete(auth, deleteUserPackage);
+router.route('/:id/editUserPackage').patch(auth, editUserPackage);
 
 module.exports = router;

@@ -29,7 +29,7 @@ const PackageSchema = new mongoose.Schema(
   {
     status: {
       type: String,
-      enum: ['paid', 'not-paid'],
+      enum: ['paid', 'not-paid', 'expired'],
       default: 'not-paid',
     },
     amount: {

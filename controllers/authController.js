@@ -4,6 +4,7 @@ const { BadRequestError, UnauthorizedError } = require('../errors');
 
 const registerUser = async (req, res) => {
   const { email, name, password, ref } = req.body;
+
   let role;
   const isFirstAccount = (await User.countDocuments({})) === 0;
   const isSecondAccount = (await User.countDocuments({})) === 1;
@@ -51,7 +52,7 @@ const getAllUsers = async (req, res) => {
     result = User.find({ ref: { $eq: ref } });
   }
   if (balance) {
-    result = User.find({ balance: { $gte: balance } });
+    result = User.find({ balance: { $lte: balance } });
   }
   if (date) {
     result = Order.find(queryObject, {
@@ -79,7 +80,7 @@ const getAllUsers = async (req, res) => {
   }
 
   const page = Number(req.query.page) || 1;
-  const limit = Number(req.query.limit) || 10;
+  const limit = Number(req.query.limit) || 5;
   const skip = (page - 1) * limit;
 
   result = result.skip(skip).limit(limit);
