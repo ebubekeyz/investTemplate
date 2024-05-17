@@ -18,9 +18,7 @@ const getAllWithdraws = async (req, res) => {
   let result = Withdraw.find(queryObject);
 
   if (user) {
-    result = Withdraw.find(queryObject, {
-      user: { $eq: user },
-    });
+    result = Withdraw.find({ user: req.user.userId, user: { $eq: user } });
   }
 
   if (status) {
@@ -41,11 +39,12 @@ const getAllWithdraws = async (req, res) => {
   }
 
   if (amount) {
-    result = Withdraw.find(queryObject, { amount: { $lte: amount } });
+    result = Withdraw.find({ user: req.user.userId, amount: { $lte: amount } });
   }
 
   if (date) {
-    result = Withdraw.find(queryObject, {
+    result = Withdraw.find({
+      user: req.user.userId,
       date: { $regex: date, $options: 'i' },
     });
   }

@@ -19,9 +19,7 @@ const getAllPackages = async (req, res) => {
   let result = Package.find(queryObject);
 
   if (user) {
-    result = Package.find(queryObject, {
-      user: { $eq: user },
-    });
+    result = Package.find({ user: req.user.userId, user: { $eq: user } });
   }
 
   if (coin) {
@@ -48,10 +46,11 @@ const getAllPackages = async (req, res) => {
   }
 
   if (amount) {
-    result = Package.find(queryObject, { amount: { $lte: amount } });
+    result = Package.find({ user: req.user.userId, amount: { $lte: amount } });
   }
   if (packageAmount) {
-    result = Package.find(queryObject, {
+    result = Package.find({
+      user: req.user.userId,
       'package.amount': { $lte: packageAmount },
     });
   }

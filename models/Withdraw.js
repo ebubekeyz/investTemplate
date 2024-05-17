@@ -5,6 +5,15 @@ const WithdrawSchema = new mongoose.Schema(
   {
     amount: {
       type: Number,
+      required: true,
+    },
+    accountNumber: {
+      type: String,
+      required: true,
+    },
+    accountName: {
+      type: String,
+      required: true,
     },
     status: {
       type: String,
